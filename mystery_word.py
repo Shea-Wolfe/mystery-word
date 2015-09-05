@@ -1,6 +1,8 @@
 import random
 import sys
 import re
+
+
 def easy_words(word_list):
     """
     Returns a filtered version of the word list with words only containing
@@ -50,7 +52,6 @@ def random_word(rand_list):
     return random.choice(rand_list)
 
 
-
 def display_word(word, guesses):
     """
     Returns a string that including blanks (_) and letters from the given word,
@@ -72,27 +73,6 @@ def display_word(word, guesses):
             count += 1
 
     return ' '.join(current_word).upper()
-# word = 'thiswords'
-# blanks = ' '.join('_'*len(word)).split()
-# print(blanks)
-# letters = 'tis'
-# count = 0
-#
-# for letter in word:
-#     if letter in letters:
-#         blanks[count] = letter
-#         count += 1
-#     else:
-#         count += 1
-# final_word = ' '.join(list_word)
-# print(final_word)
-# print(type(final_word))
-# print(blanks)
-# ' '.join(blanks)
-
-
-
-
 
 
 def is_word_complete(word, guesses):
@@ -112,6 +92,7 @@ def is_word_complete(word, guesses):
         return True
     else:
         return False
+
 
 def main():
     """
