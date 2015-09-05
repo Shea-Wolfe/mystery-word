@@ -1,5 +1,6 @@
 import random
 import sys
+import re
 def easy_words(word_list):
     """
     Returns a filtered version of the word list with words only containing
@@ -42,11 +43,11 @@ def hard_words(word_list):
     return hard_list
 
 
-def random_word(word_list):
+def random_word(rand_list):
     """
     Returns a random word from the word list.
     """
-    return word_list[random.randint(0, len(word_list))]
+    return random.choice(rand_list)
 
 
 
@@ -112,18 +113,6 @@ def is_word_complete(word, guesses):
     else:
         return False
 
-
-def get_difficulty(user_input):
-    if difficulty == 'quit':
-        sys.exit()
-    elif difficulty == 'e' or difficulty == 'easy':
-        return 'e'
-    elif difficulty == 'n' or difficulty == 'normal' or difficulty == 'm' or difficulty == 'medium':
-        return 'n'
-    elif difficulty == 'h' or difficulty == 'hard':
-        return 'h'
-        return get_difficulty
-
 def main():
     """
     Runs when the program is called from the command-line.
@@ -138,8 +127,12 @@ def main():
     4. Finishing the game and displaying whether the user has won or lost
     5. Giving the user the option to play again
     """
+    with open('/usr/share/dict/words') as i:
+        word_list = i.read()
+    word_list = word_list.split()
+
     while True:
-        difficulty = input('Please enter a difficulty [E]asy, [N]ormal, or [H]ard.  At any time type QUIT to quit.> ').lower())
+        difficulty = input('Please enter a difficulty [E]asy, [N]ormal, or [H]ard.').lower()
         if difficulty not in 'enh' or len(difficulty) != 1:
             print('That\'s not a valid difficulty!')
             continue
@@ -153,41 +146,45 @@ def main():
             computer_word_list = hard_words(word_list)
             break
     computer_word = random_word(computer_word_list)
+    print(type(computer_word))
     strikes = 8
     player_guesses = ''
     print('Word has {} letters'.format(len(computer_word)))
-    while strikes <= 0 or is_word_complete(computer_word, player_guesses) == False:
-        print(display_word(computer_word, player_guesses)) #remember to fix
-        print(strikes)
-        print(' '.split(player_guesses.join())
-        player_letter = player_guess()
-        letters.replace(player_letter,'')
-        guessed_letters.append(player_letter)
-        if player_letter in computer_word:
-            print('That\'s in the word!')
-            print('you have {} guesses remaining!'.format(strikes))
-            popped_letters = []
-            for letter in computer_word:
-                if letter == player_letter:
-                    #figure out how to get the index
-                    #set the index of word_display to = the letter.
-        else:
-            strikes -=1
-            print('Sorry, that\'s not in the word!)
-            print('you have {} guesses remaining!'.format(strikes))
-            pass #print out _ _ _ map
+    while strikes > 0 and is_word_complete(computer_word, player_guesses) == False:
+        print(display_word(computer_word, player_guesses))
+        print('you have {} guesses remaining'.format(strikes))
+        print(player_guesses.upper())
+        while True:
+            current_guess = re.sub(r'[^a-z]','',input('Please guess a letter! > ').lower())
+            if current_guess in player_guesses:
+                print('You\'ve already guessed that one!')
+                print('as a reminder you\'ve guessed {}'.format(player_guesses))
+                continue
+            elif len(current_guess) != 1:
+                print('That\'s not a valid guess! Please enter a single letter')
+                continue
+            elif current_guess in computer_word:
+                player_guesses = player_guesses + current_guess
+                print('That\'s in the word!  Keep going!')
+                break
+            elif current_guess not in computer_word:
+                print('Sorry, that\'s not in the word.  Try again.')
+                strikes -= 1
+                player_guesses = player_guesses + current_guess
+                break
+
     if strikes <= 0:
-        credit = input('Sorry, you lose. Word was {}  Try again? [y]/[n]'.format(computer_word))
+        credit = input(('Sorry, you lose. Word was {}  Try again? [y]/[n]'.format(computer_word.upper())))
         if credit == 'y' or credit == 'yes':
-            return game()
+            return main()
         else:
-            sys.exit()
+            pass
     else:
-        credit = input('Congratulations!  You\'ve won! Play again? [y]/[n]')
+        credit = input('Congratulations!  You\'ve won!  Your word was {} Play again? [y]/[n]'.format(computer_word.upper()))
         if credit == 'y' or credit == 'yes':
-            return game()
+            return main()
         else:
-            sys.exit()
+            pass
 
 
 if __name__ == '__main__':
