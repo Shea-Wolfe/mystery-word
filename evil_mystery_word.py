@@ -102,6 +102,17 @@ def match_length(word_list, computer_word):
             pass
     return matched_word_list
 
+def change_word(word_list, computer_word, player_guesses):
+    print(word_list)
+    while len(word_list) > 0:
+        for word in word_list:
+            if player_guesses in word:
+                word_list.remove(word)
+            else:
+                pass
+        computer_word = random_word(word_list)
+        return word_list, computer_word
+
 
 def main():
     """
@@ -144,6 +155,7 @@ def main():
         print(display_word(computer_word, player_guesses))
         print('you have {} guesses remaining'.format(strikes))
         print(player_guesses.upper())
+        print(computer_word)
         while True:
             current_guess = re.sub(r'[^a-z]','',input('Please guess a letter! > ').lower())
             if current_guess in player_guesses:
@@ -154,9 +166,19 @@ def main():
                 print('That\'s not a valid guess! Please enter a single letter')
                 continue
             elif current_guess in computer_word:
+                print(computer_word)
                 player_guesses = player_guesses + current_guess
-                print('That\'s in the word!  Keep going!')
-                break
+                computer_word_list, computer_word = change_word(computer_word_list, computer_word, player_guesses)
+                print(computer_word)
+                print(computer_word_list)
+                if current_guess in computer_word:
+                    print('That\'s in the word!  Keep going!')
+                    break
+                else:
+                    print('Sorry, that\'s not in the word.  Try again.')
+                    strikes -= 1
+                    player_guesses = player_guesses + current_guess
+                    break
             elif current_guess not in computer_word:
                 print('Sorry, that\'s not in the word.  Try again.')
                 strikes -= 1
