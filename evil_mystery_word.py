@@ -93,6 +93,15 @@ def is_word_complete(word, guesses):
     else:
         return False
 
+def match_length(word_list, computer_word):
+    matched_word_list = []
+    for word in word_list:
+        if len(word) == len(computer_word):
+            matched_word_list.append(word)
+        else:
+            pass
+    return matched_word_list
+
 
 def main():
     """
@@ -113,7 +122,7 @@ def main():
     word_list = word_list.split()
 
     while True:
-        difficulty = input('Please enter a difficulty [E]asy, [N]ormal, or [H]ard.').lower()
+        difficulty = input('Welcome to evil mystery_word, select your doom! [E]asy, [N]ormal, or [H]ard.').lower()
         if difficulty not in 'enh' or len(difficulty) != 1:
             print('That\'s not a valid difficulty!')
             continue
@@ -127,6 +136,7 @@ def main():
             computer_word_list = hard_words(word_list)
             break
     computer_word = random_word(computer_word_list)
+    computer_word_list = match_length(computer_word_list, computer_word)
     strikes = 8
     player_guesses = ''
     print('Word has {} letters'.format(len(computer_word)))
