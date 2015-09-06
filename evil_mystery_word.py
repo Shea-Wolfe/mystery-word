@@ -122,6 +122,20 @@ def list_to_dict(computer_word_list, computer_word, current_guess):
         count += 1
     return word_dict
 
+def scrub_dict(word_dict, current_computer_word, current_guesses):
+    '''Takes a dictionary, the current computer word and the list of guesses
+    transforms the dictionary to a list and removes any words That
+    don't match what's already been revealed in the current word'''
+    for key in word_dict:
+        word_list = word_dict[key].split()
+        for word in word_list:
+            if display_word(word, current_guesses) != display_word(current_computer_word, current_guesses):
+                word_list.remove(word)
+            else:
+                pass
+    return word_list
+
+
 def main():
     """
     Runs when the program is called from the command-line.
