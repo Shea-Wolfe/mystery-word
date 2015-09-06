@@ -102,17 +102,25 @@ def match_length(word_list, computer_word):
             pass
     return matched_word_list
 
-def change_word(word_list, computer_word, player_guesses):
-    print(word_list)
-    while len(word_list) > 0:
-        for word in word_list:
-            if player_guesses in word:
-                word_list.remove(word)
+def list_to_dict(computer_word_list, computer_word, current_guess):
+    '''Takes a list, a string, and a single letter string as input
+    all words in list must be same length as the string.
+    output is a dictionary with keys = the index in each
+    word where the current guess is found'''
+
+    count = 0
+    word_dict = {}
+    while count < len(computer_word):
+        for word in computer_word_list:
+            if word[count] == current_guess:
+                if count in word_dict:
+                    word_dict[count] += (' ' + word)
+                else:
+                    word_dict[count] = word
             else:
                 pass
-        computer_word = random_word(word_list)
-        return word_list, computer_word
-
+        count += 1
+    return word_dict
 
 def main():
     """
@@ -129,7 +137,7 @@ def main():
     5. Giving the user the option to play again
     """
     with open('/usr/share/dict/words') as i:
-        word_list = i.read()
+        word_list = i.read().lower()
     word_list = word_list.split()
 
     while True:
@@ -155,7 +163,6 @@ def main():
         print(display_word(computer_word, player_guesses))
         print('you have {} guesses remaining'.format(strikes))
         print(player_guesses.upper())
-        print(computer_word)
         while True:
             current_guess = re.sub(r'[^a-z]','',input('Please guess a letter! > ').lower())
             if current_guess in player_guesses:
@@ -165,13 +172,12 @@ def main():
             elif len(current_guess) != 1:
                 print('That\'s not a valid guess! Please enter a single letter')
                 continue
-            elif current_guess in computer_word:
-                print(computer_word)
-                player_guesses = player_guesses + current_guess
-                computer_word_list, computer_word = change_word(computer_word_list, computer_word, player_guesses)
-                print(computer_word)
-                print(computer_word_list)
+            else:
+                computer_word_dict = list_to_dict(computer_word_list, computer_word, current_guess)
+                print(computer_word_dict)
+                computer_word = random_word(computer_word_list)
                 if current_guess in computer_word:
+                    player_guesses = player_guesses + current_guess
                     print('That\'s in the word!  Keep going!')
                     break
                 else:
@@ -179,11 +185,6 @@ def main():
                     strikes -= 1
                     player_guesses = player_guesses + current_guess
                     break
-            elif current_guess not in computer_word:
-                print('Sorry, that\'s not in the word.  Try again.')
-                strikes -= 1
-                player_guesses = player_guesses + current_guess
-                break
 
     if strikes <= 0:
         credit = input(('Sorry, you lose. Word was {}  Try again? [y]/[n]'.format(computer_word.upper())))
