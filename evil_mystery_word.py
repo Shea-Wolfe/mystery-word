@@ -112,24 +112,30 @@ def list_to_dict(computer_word_list, computer_word, current_guess):
     word_dict = {}
     while count < len(computer_word):
         for word in computer_word_list:
-            if word[count] == current_guess:
+            if current_guess not in word:
+                if len(computer_word) in word_dict:
+                    word_dict[len(computer_word)] += (' ' + word)
+                else:
+                    word_dict[len(computer_word)] = word
+            elif word[count] == current_guess:
                 if count in word_dict:
                     word_dict[count] += (' ' + word)
                 else:
                     word_dict[count] = word
             else:
                 pass
+
         count += 1
     return word_dict
 
-def scrub_dict(word_dict, current_computer_word, all_guesses):
+def scrub_dict(word_dict, current_display, previous_guesses):
     '''Takes a dictionary, the current computer word and the list of guesses
     removes any words in the dictionary that don't match the currently revealed word'''
     for key in word_dict:
         word_list = word_dict[key].split()
         temp_list = []
         for word in word_list:
-            if display_word(word, all_guesses) == display_word(current_computer_word, all_guesses):
+            if display_word(word, previous_guesses) == current_display:
                 temp_list.append(word)
             else:
                 pass
@@ -185,10 +191,12 @@ def main():
     player_guesses = ''
     print('Word has {} letters'.format(len(computer_word)))
     while strikes > 0 and is_word_complete(computer_word, player_guesses) == False:
-        print(display_word(computer_word, player_guesses))
+        current_display = display_word(computer_word, player_guesses)
+        print(current_display)
         print('you have {} guesses remaining'.format(strikes))
         print(player_guesses.upper())
         while True:
+            print(computer_word)
             current_guess = re.sub(r'[^a-z]','',input('Please guess a letter! > ').lower())
             if current_guess in player_guesses:
                 print('You\'ve already guessed that one!')
@@ -198,12 +206,11 @@ def main():
                 print('That\'s not a valid guess! Please enter a single letter')
                 continue
             else:
-                player_guesses = player_guesses + current_guess
                 computer_word_dict = list_to_dict(computer_word_list, computer_word, current_guess)
-                computer_word_dict = scrub_dict(computer_word_dict, computer_word, player_guesses)
+                computer_word_dict = scrub_dict(computer_word_dict, current_display, player_guesses)
                 computer_word_list = list_select(computer_word_dict)
-                print(computer_word_dict)
                 computer_word = random_word(computer_word_list)
+                player_guesses += current_guess
                 if current_guess in computer_word:
                     print('That\'s in the word!  Keep going!')
                     break
