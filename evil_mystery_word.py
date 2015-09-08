@@ -122,19 +122,30 @@ def list_to_dict(computer_word_list, computer_word, current_guess):
         count += 1
     return word_dict
 
-def scrub_dict(word_dict, current_computer_word, current_guesses):
+def scrub_dict(word_dict, current_computer_word, all_guesses):
     '''Takes a dictionary, the current computer word and the list of guesses
-    transforms the dictionary to a list and removes any words That
-    don't match what's already been revealed in the current word'''
+    removes any words in the dictionary that don't match the currently revealed word'''
     for key in word_dict:
         word_list = word_dict[key].split()
+        temp_list = []
         for word in word_list:
-            if display_word(word, current_guesses) != display_word(current_computer_word, current_guesses):
-                word_list.remove(word)
+            if display_word(word, all_guesses) == display_word(current_computer_word, all_guesses):
+                temp_list.append(word)
             else:
                 pass
-    return word_list
+        word_dict[key] = temp_list
+    return word_dict
 
+
+def list_select(word_dict):
+    '''Takes a dictionary as input.  outputs the longest key in that dictionary'''
+    list_out = []
+    for key in word_dict:
+        if len(word_dict[key]) > len(list_out):
+            list_out = word_dict[key]
+        else:
+            pass
+    return list_out
 
 def main():
     """
@@ -187,17 +198,18 @@ def main():
                 print('That\'s not a valid guess! Please enter a single letter')
                 continue
             else:
+                player_guesses = player_guesses + current_guess
                 computer_word_dict = list_to_dict(computer_word_list, computer_word, current_guess)
+                computer_word_dict = scrub_dict(computer_word_dict, computer_word, player_guesses)
+                computer_word_list = list_select(computer_word_dict)
                 print(computer_word_dict)
                 computer_word = random_word(computer_word_list)
                 if current_guess in computer_word:
-                    player_guesses = player_guesses + current_guess
                     print('That\'s in the word!  Keep going!')
                     break
                 else:
                     print('Sorry, that\'s not in the word.  Try again.')
                     strikes -= 1
-                    player_guesses = player_guesses + current_guess
                     break
 
     if strikes <= 0:
