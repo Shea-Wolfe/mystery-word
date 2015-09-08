@@ -154,13 +154,13 @@ def main():
                 break
 
     if strikes <= 0:
-        credit = input(('Sorry, you lose. Word was {}  Try again? [y]/[n]'.format(computer_word.upper())))
+        credit = input(('Sorry, you lose. Word was {}  Try again? [y]/[n]'.format(computer_word.upper()))).lower()
         if credit == 'y' or credit == 'yes':
             return main()
         else:
             pass
     else:
-        credit = input('Congratulations!  You\'ve won!  Your word was {} Play again? [y]/[n]'.format(computer_word.upper()))
+        credit = input('Congratulations!  You\'ve won!  Your word was {} Play again? [y]/[n]'.format(computer_word.upper())).lower()
         if credit == 'y' or credit == 'yes':
             return main()
         else:
