@@ -2,6 +2,7 @@
 * To run mystery_word.py on the command line enter $ python mystery_word.py
 * To run mystery_word_test.py on the command line enter $ python mystery_word_test.py
 * To run evil_mystery_word.py on the command line enter $ python evil_mystery_word.py
+
 ## Description
 
 mystery_word is a program that uses player guesses to slowly reveal a word.  If they can get the word before they guess 8 letters wrong they win!  

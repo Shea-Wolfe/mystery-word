@@ -129,7 +129,7 @@ def list_to_dict(computer_word_list, computer_word, current_guess):
     return word_dict
 
 def scrub_dict(word_dict, current_display, previous_guesses):
-    '''Takes a dictionary, the current computer word and the list of guesses
+    '''Takes a dictionary, the current revealed parts of the word and the list of guesses
     removes any words in the dictionary that don't match the currently revealed word'''
     for key in word_dict:
         word_list = word_dict[key].split()
@@ -219,13 +219,13 @@ def main():
                     break
 
     if strikes <= 0:
-        credit = input(('Sorry, you lose. Word was {}  Try again? [y]/[n]'.format(computer_word.upper())))
+        credit = input(('Sorry, you lose. Word was {}  Try again? [y]/[n]'.format(computer_word.upper()))).lower()
         if credit == 'y' or credit == 'yes':
             return main()
         else:
             pass
     else:
-        credit = input('Congratulations!  You\'ve won!  Your word was {} Play again? [y]/[n]'.format(computer_word.upper()))
+        credit = input('Congratulations!  You\'ve won!  Your word was {} Play again? [y]/[n]'.format(computer_word.upper())).lower()
         if credit == 'y' or credit == 'yes':
             return main()
         else:
