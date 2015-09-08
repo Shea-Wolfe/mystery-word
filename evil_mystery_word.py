@@ -196,7 +196,6 @@ def main():
         print('you have {} guesses remaining'.format(strikes))
         print(player_guesses.upper())
         while True:
-            print(computer_word)
             current_guess = re.sub(r'[^a-z]','',input('Please guess a letter! > ').lower())
             if current_guess in player_guesses:
                 print('You\'ve already guessed that one!')
